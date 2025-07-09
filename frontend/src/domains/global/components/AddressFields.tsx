@@ -1,40 +1,41 @@
 import Button from "@/design-system/Button";
 import Input from "@/design-system/Form/Input";
 import { useEffect, useState, type ReactNode } from "react";
-import { FieldValues, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import useSafeFetch from "../hooks/useSafeFetch";
 import useSnackbar from "../hooks/useSnackbar";
 import { useQuery } from "@tanstack/react-query";
-import formatInputPrefix from "../utils/formatInputPrefix";
+import { addressDefaultValues } from "@/domains/users/constants";
+import Tooltip from "@/design-system/Tooltip";
+import { UserFormInputs } from "@/domains/users/types";
 
 interface ViaCepAddress {
-  logradouro?: string;
-  bairro?: string;
-  localidade?: string;
-  uf?: string;
-  erro?: boolean;
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  erro: boolean;
 }
 
-interface AddressFieldsProps<T extends FieldValues> {
-  inputNamePrefix?: keyof T & string;
-  autoFocus?: boolean;
+interface AddressFieldsProps {
+  defaultOpen?: boolean;
 }
 
-export default function AddressFields<T extends FieldValues>({
-  inputNamePrefix,
-  autoFocus = false,
-}: AddressFieldsProps<T>): ReactNode {
+export default function AddressFields({
+  defaultOpen = false,
+}: AddressFieldsProps): ReactNode {
   const [currentValidCep, setCurrentValidCep] = useState("");
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const { setValue, trigger, getValues } = useFormContext();
+  const { setValue, trigger, getValues } = useFormContext<UserFormInputs>();
 
   const { safeFetch } = useSafeFetch();
   const { showErrorSnackbar } = useSnackbar();
 
   async function fillAddress() {
-    const isValid = await trigger(formatInputPrefix("cep", inputNamePrefix));
+    const isValid = await trigger("address.cep");
     if (isValid) {
-      const cep = getValues(formatInputPrefix("cep", inputNamePrefix));
+      const cep = getValues("address.cep");
       setCurrentValidCep(cep);
     }
   }
@@ -58,25 +59,18 @@ export default function AddressFields<T extends FieldValues>({
       });
       return;
     }
-    if (cepInfo) {
-      setValue(
-        formatInputPrefix("street", inputNamePrefix),
-        cepInfo.logradouro,
-        { shouldDirty: true }
-      );
-      setValue(
-        formatInputPrefix("neighborhood", inputNamePrefix),
-        cepInfo.bairro,
-        { shouldDirty: true }
-      );
-      setValue(formatInputPrefix("city", inputNamePrefix), cepInfo.localidade, {
-        shouldDirty: true,
-      });
-      setValue(formatInputPrefix("state", inputNamePrefix), cepInfo.uf, {
-        shouldDirty: true,
-      });
-    }
-  }, [cepInfo, inputNamePrefix]);
+
+    if (!cepInfo) return;
+
+    setValue("address.street", cepInfo.logradouro, { shouldDirty: true });
+    setValue("address.neighborhood", cepInfo.bairro, { shouldDirty: true });
+    setValue("address.city", cepInfo.localidade, {
+      shouldDirty: true,
+    });
+    setValue("address.state", cepInfo.uf, {
+      shouldDirty: true,
+    });
+  }, [cepInfo, setValue, showErrorSnackbar]);
 
   function handleOnSubmitCepField(
     event: React.KeyboardEvent<HTMLInputElement>
@@ -87,19 +81,43 @@ export default function AddressFields<T extends FieldValues>({
     }
   }
 
-  return (
+  return !isOpen ? (
+    <div className="col-span-full">
+      <Button
+        variant="secondary"
+        label="Adicionar endereço"
+        onClick={() => {
+          setIsOpen(true);
+          setValue("address", addressDefaultValues, { shouldDirty: true });
+        }}
+        fullWidth
+        textAlign="center"
+      />
+    </div>
+  ) : (
     <>
+      <div className="flex items-center justify-end col-span-full">
+        <Tooltip content="Remover endereço">
+          <Button
+            variant="tertiary"
+            iconLeft="Delete"
+            onClick={() => {
+              setIsOpen(false);
+              setValue("address", null, { shouldDirty: true });
+            }}
+          />
+        </Tooltip>
+      </div>
       <div
         className="flex items-center justify-between gap-1"
         onKeyDown={handleOnSubmitCepField}
       >
-        <Input<T>
+        <Input<UserFormInputs>
           label="CEP"
-          name={formatInputPrefix("cep", inputNamePrefix)}
+          name="address.cep"
           mask="cep"
           maxLength={9}
           required
-          autoFocus={autoFocus}
           forceUnselect
         />
         <Button
@@ -110,31 +128,12 @@ export default function AddressFields<T extends FieldValues>({
           state={isFetching ? "loading" : undefined}
         />
       </div>
-      <Input<T>
-        label="Número"
-        name={formatInputPrefix("number", inputNamePrefix)}
-        required
-      />
-      <Input<T>
-        label="Rua"
-        name={formatInputPrefix("street", inputNamePrefix)}
-      />
-      <Input<T>
-        label="Bairro"
-        name={formatInputPrefix("neighborhood", inputNamePrefix)}
-      />
-      <Input<T>
-        label="Cidade"
-        name={formatInputPrefix("city", inputNamePrefix)}
-      />
-      <Input<T>
-        label="Estado"
-        name={formatInputPrefix("state", inputNamePrefix)}
-      />
-      <Input<T>
-        label="Complemento"
-        name={formatInputPrefix("complement", inputNamePrefix)}
-      />
+      <Input<UserFormInputs> label="Número" name="address.number" required />
+      <Input<UserFormInputs> label="Rua" name="address.street" />
+      <Input<UserFormInputs> label="Bairro" name="address.neighborhood" />
+      <Input<UserFormInputs> label="Cidade" name="address.city" />
+      <Input<UserFormInputs> label="Estado" name="address.state" />
+      <Input<UserFormInputs> label="Complemento" name="address.complement" />
     </>
   );
 }

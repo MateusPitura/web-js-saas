@@ -49,12 +49,14 @@ function Row({ label, value, onEdit, isLoading = false }: SectionRowProps) {
         <span className="text-light-onSurface flex-1 text-body-large">
           {label}
         </span>
-        <Loading
-          className="flex-1 text-light-onSurface text-body-large line-clamp-1"
-          isLoading={isLoading}
-        >
-          {value}
-        </Loading>
+        {value && (
+          <Loading
+            className="flex-1 text-light-onSurface text-body-large line-clamp-1"
+            isLoading={isLoading}
+          >
+            {value}
+          </Loading>
+        )}
       </div>
       <Button
         variant="quaternary"

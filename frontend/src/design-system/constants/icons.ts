@@ -14,6 +14,7 @@ import Store from "@mui/icons-material/StoreOutlined";
 import VerifiedUser from "@mui/icons-material/VerifiedUserOutlined";
 import Settings from "@mui/icons-material/SettingsOutlined";
 import PersonAdd from "@mui/icons-material/PersonAddOutlined";
+import Delete from '@mui/icons-material/DeleteOutlineOutlined';
 
 export const icons = {
   FileDownload,
@@ -32,4 +33,5 @@ export const icons = {
   VerifiedUser,
   Settings,
   PersonAdd,
+  Delete
 };

@@ -61,7 +61,7 @@ export default function UsersTable(): ReactNode {
   }
 
   const { data: usersInfo, isFetching: isFetchingUsersInfo } = useQuery({
-    queryKey: ["user", filterFormatted],
+    queryKey: ["users", filterFormatted],
     queryFn: ({ queryKey }) => getUsersInfo(queryKey[1]),
     select: selectUsersInfo,
   });

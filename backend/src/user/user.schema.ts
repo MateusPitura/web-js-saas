@@ -1,30 +1,29 @@
 import { s } from '@shared/safeZod';
 import { createZodDto } from 'nestjs-zod';
 
-const SchemaAddressToCreate = s.SchemaAddress.extend({
-  street: s.string().optional(),
-  neighborhood: s.string().optional(),
-  city: s.string().optional(),
-  state: s.string().optional(),
-  complement: s.string().optional(),
+const SchemaAddress = s.object({
+  street: s.string().nullish(),
+  neighborhood: s.string().nullish(),
+  city: s.string().nullish(),
+  state: s.string().nullish(),
+  complement: s.string().nullish(),
 });
 
-const SchemaAddressToUpdate = s.SchemaAddress.extend({
-  street: s.string().nullable(),
-  neighborhood: s.string().nullable(),
-  city: s.string().nullable(),
-  state: s.string().nullable(),
-  complement: s.string().nullable(),
-}).partial();
+const SchemaAddressToCreate = s.SchemaAddress.extend({
+  ...SchemaAddress.shape,
+});
+const SchemaAddressToUpdate = s.SchemaAddress.partial().extend({
+  ...SchemaAddress.shape,
+});
 
 const SchemaUserPostInDto = s.object({
   fullName: s.fullName(),
   email: s.email(),
-  cpf: s.cpf().nullable().optional(),
-  birthDate: s.birthDate().nullable().optional(),
-  code: s.string().nullable().optional(),
-  cellPhone: s.cellphone().nullable().optional(),
-  address: SchemaAddressToCreate.optional(),
+  cpf: s.cpf().nullish(),
+  birthDate: s.birthDate().nullish(),
+  code: s.string().nullish(),
+  cellPhone: s.cellphone().nullish(),
+  address: SchemaAddressToCreate.nullish(),
   roleId: s.id(),
 });
 
@@ -54,7 +53,9 @@ const SchemaUserUpdateInDto = SchemaUserPostInDto.extend({
   password: s.password(),
   isActive: s.boolean(),
   jit: s.string(36).nullable(),
-}).partial();
+})
+  .omit({ email: true })
+  .partial();
 
 const SchemaProfilePatchInDto = SchemaUserUpdateInDto.omit({
   roleId: true,

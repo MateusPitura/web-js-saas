@@ -33,7 +33,7 @@ export default function DisableUserModal({
     mutationFn: disableUser,
     onSuccess: () => {
       handleUsersFilter({ page: 1 });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       showSuccessSnackbar({
         title: `Usuário ${userName} desativado com sucesso`,
       });

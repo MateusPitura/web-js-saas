@@ -217,9 +217,8 @@ export class UserService {
     select = GET_USER,
     showNotFoundError = true,
   }: UpdateInput) {
-    if (userUpdateInDto.email || userUpdateInDto.cpf) {
+    if (userUpdateInDto.cpf) {
       await this.verifyDuplicated({
-        email: userUpdateInDto.email,
         cpf: userUpdateInDto.cpf ?? undefined,
       });
     }

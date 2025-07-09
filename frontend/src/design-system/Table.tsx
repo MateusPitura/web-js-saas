@@ -37,7 +37,7 @@ function Row({ children, className, gridColumns = "default" }: RowProps) {
   return (
     <div
       className={classNames(
-        "p-4 grid gap-2 bg-light-surfaceContainerLowest h-[72px] items-center border-b border-neutral-300",
+        "p-4 grid gap-2 bg-light-surfaceContainerLowest h-[72px] items-center border-b border-outlineVariant",
         className
       )}
       style={{

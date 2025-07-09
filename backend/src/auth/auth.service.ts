@@ -4,6 +4,7 @@ import {
   AuthResetPassword,
   AuthSignin,
   ForgetPasswordInput,
+  RequestChangePasswordInput,
   ResetPasswordInput,
   SiginInInput,
   SignOutInput,
@@ -96,24 +97,25 @@ export class AuthService {
     await this.prismaService.transaction(async (transaction) => {
       const { clientId } = await this.clientService.create({ transaction });
 
-      await this.organizationService.create({
-        organizationCreateInDto: {
-          cnpj: authSignUpInDto.cnpj,
-          name: authSignUpInDto.name,
-          clientId,
-        },
-        transaction,
-      });
-
-      await this.userService.create({
-        userCreateInDto: {
-          email: authSignUpInDto.email,
-          fullName: authSignUpInDto.fullName,
-          clientId,
-          roleId: SEED_ROLE_ADMIN_ID,
-        },
-        transaction,
-      });
+      await Promise.all([
+        this.organizationService.create({
+          organizationCreateInDto: {
+            cnpj: authSignUpInDto.cnpj,
+            name: authSignUpInDto.name,
+            clientId,
+          },
+          transaction,
+        }),
+        this.userService.create({
+          userCreateInDto: {
+            email: authSignUpInDto.email,
+            fullName: authSignUpInDto.fullName,
+            clientId,
+            roleId: SEED_ROLE_ADMIN_ID,
+          },
+          transaction,
+        }),
+      ]);
     });
 
     return true;
@@ -132,7 +134,7 @@ export class AuthService {
   async forgetPassword({ authForgetPasswordInDto }: ForgetPasswordInput) {
     const user = await this.userService.findOne({
       where: { email: authForgetPasswordInDto.email },
-      select: { id: true, clientId: true },
+      select: { clientId: true },
       showNotFoundError: false,
     });
 
@@ -146,6 +148,30 @@ export class AuthService {
 
     void this.emailService.sendEmail({
       to: authForgetPasswordInDto.email,
+      title: 'Redefina sua senha',
+      body: `${FRONTEND_URL}/?token=${token}`,
+    });
+
+    return true;
+  }
+
+  async requestChangePassword({
+    requestChangePasswordInDto: requestChangePasswordInputInDto,
+  }: RequestChangePasswordInput) {
+    const user = await this.userService.findOne({
+      where: { id: requestChangePasswordInputInDto.id },
+      select: { email: true, clientId: true },
+      clientId: requestChangePasswordInputInDto.clientId,
+    });
+
+    const payload: AuthResetPassword = {
+      email: user!.email,
+      clientId: user!.clientId,
+    };
+    const token = this.jwtService.sign(payload);
+
+    void this.emailService.sendEmail({
+      to: user!.email,
       title: 'Redefina sua senha',
       body: `${FRONTEND_URL}/?token=${token}`,
     });

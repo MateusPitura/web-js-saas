@@ -6,10 +6,12 @@ import PageHeader from "@/domains/global/components/PageHeader";
 import Section from "@/domains/global/components/Section";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { SchemaUserForm } from "../schemas";
-import { UserFormInputs } from "../types";
+import { SchemaUserForm } from "../../users/schemas";
+import { UserFormInputs } from "../../users/types";
 import { SEED_ROLE_ADMIN_ID, SEED_ROLE_SALES_ID } from "@shared/constants";
 import { Action, Resource } from "@shared/types";
+
+const PREVIOUS_PAGE = -1;
 
 interface UserFormProperties {
   defaultValues: Partial<UserFormInputs>;
@@ -17,9 +19,10 @@ interface UserFormProperties {
   isPending: boolean;
   headerPrimaryBtnLabel: string;
   headerTitle: string;
-  onlyDirty?: boolean;
+  isEdit?: boolean;
   resource?: Resource;
   action?: Action;
+  allowEditRole?: boolean;
 }
 
 export default function UserForm({
@@ -28,9 +31,10 @@ export default function UserForm({
   isPending,
   headerPrimaryBtnLabel,
   headerTitle,
-  onlyDirty,
+  isEdit = false,
   resource,
   action,
+  allowEditRole = false,
 }: UserFormProperties): ReactNode {
   const navigate = useNavigate();
 
@@ -41,13 +45,13 @@ export default function UserForm({
         defaultValues={defaultValues}
         onSubmit={onSubmit}
         className="gap-4 flex flex-col"
-        onlyDirty={onlyDirty}
+        onlyDirty={isEdit}
       >
         <PageHeader
           title={headerTitle}
           primaryButtonLabel={headerPrimaryBtnLabel}
           secondaryButtonLabel="Cancelar"
-          onClickSecondaryBtn={() => navigate("/users")}
+          onClickSecondaryBtn={() => navigate(PREVIOUS_PAGE)}
           primaryBtnState={isPending ? "loading" : undefined}
           dirty
           primaryBtnResource={resource}
@@ -65,12 +69,19 @@ export default function UserForm({
                   required
                   autoFocus
                 />
-                <Input<UserFormInputs> name="email" label="Email" required />
+                <Input<UserFormInputs>
+                  name="email"
+                  label="Email"
+                  required
+                  disabled={isEdit}
+                  type="email"
+                />
                 <Input<UserFormInputs>
                   name="cellPhone"
                   label="Celular"
                   mask="cellphone"
                   maxLength={15}
+                  type="tel"
                 />
                 <Input<UserFormInputs>
                   name="cpf"
@@ -89,24 +100,23 @@ export default function UserForm({
             <Section.Group>
               <Section.Header title="Endereço" />
               <Section.Body>
-                <AddressFields<UserFormInputs>
-                  inputNamePrefix="address"
-                  autoFocus={false}
-                />
+                <AddressFields defaultOpen={!!defaultValues.address} />
               </Section.Body>
             </Section.Group>
-            <Section.Group>
-              <Section.Header title="Categoria" />
-              <Section.Body>
-                <Choice<UserFormInputs> name="roleId">
-                  <Choice.Radio
-                    label="Administrador"
-                    value={SEED_ROLE_ADMIN_ID}
-                  />
-                  <Choice.Radio label="Vendedor" value={SEED_ROLE_SALES_ID} />
-                </Choice>
-              </Section.Body>
-            </Section.Group>
+            {allowEditRole && (
+              <Section.Group>
+                <Section.Header title="Categoria" />
+                <Section.Body>
+                  <Choice<UserFormInputs> name="roleId">
+                    <Choice.Radio
+                      label="Administrador"
+                      value={SEED_ROLE_ADMIN_ID}
+                    />
+                    <Choice.Radio label="Vendedor" value={SEED_ROLE_SALES_ID} />
+                  </Choice>
+                </Section.Body>
+              </Section.Group>
+            )}
           </Section>
         </div>
       </Form>

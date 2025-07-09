@@ -8,12 +8,13 @@ import {
 } from "@tanstack/react-query";
 import { useEffect, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import UserForm from "../forms/UserForm";
+import UserForm from "@/domains/global/forms/UserForm";
 import selectUserInfo from "../utils/selectUserInfo";
 import Spinner from "@/design-system/Spinner";
 import { BACKEND_URL } from "@/domains/global/constants";
 import { User } from "@/domains/global/types/model";
 import { UserFormInputs } from "../types";
+import parseAddressPayload from "@/domains/global/utils/parseAddressPayload";
 
 export default function EditUserContainer(): ReactNode {
   const { safeFetch } = useSafeFetch();
@@ -37,9 +38,19 @@ export default function EditUserContainer(): ReactNode {
   });
 
   async function editUser(data: UserFormInputs) {
+    const { address, ...rest } = data;
+
+    const addressPayload = parseAddressPayload({
+      newAddress: address,
+      oldAddress: userData?.address,
+    });
+
     await safeFetch(`${BACKEND_URL}/user/${userId}`, {
       method: "PATCH",
-      body: data,
+      body: {
+        ...rest,
+        ...(addressPayload && { address: addressPayload }),
+      },
       resource: "USERS",
       action: "UPDATE",
     });
@@ -54,19 +65,23 @@ export default function EditUserContainer(): ReactNode {
       queryClient.invalidateQueries({
         queryKey: ["usersDashboard"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
       navigate("/users");
     },
   });
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (isSuccess) {
         queryClient.invalidateQueries({
-          queryKey: ["user"],
+          queryKey: ["user", userId],
         });
       }
-    };
-  }, [isSuccess, queryClient]);
+    },
+    [isSuccess, queryClient, userId]
+  );
 
   if (isFetching) {
     return (
@@ -84,9 +99,10 @@ export default function EditUserContainer(): ReactNode {
         isPending={isPending || !!isFetchingCep}
         headerPrimaryBtnLabel="Alterar"
         headerTitle="Alterar usuário"
-        onlyDirty
+        isEdit
         resource="USERS"
         action="UPDATE"
+        allowEditRole
       />
     )
   );

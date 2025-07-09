@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import useSafeFetch from "@/domains/global/hooks/useSafeFetch";
 import useSnackbar from "@/domains/global/hooks/useSnackbar";
-import UserForm from "../forms/UserForm";
+import UserForm from "@/domains/global/forms/UserForm";
 import { UserFormInputs } from "../types";
 import { BACKEND_URL } from "@/domains/global/constants";
 import { userDefaultValues } from "../constants";
@@ -32,11 +32,11 @@ export default function NewUsersContainer(): ReactElement {
     mutationFn: createUser,
     onSuccess: () => {
       showSuccessSnackbar({
-        title: "Enviaremos um email para definir a senha",
+        title: "Um email será enviado",
         description: "Confira também a caixa de spam",
       });
       navigate("/users");
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["usersDashboard"] });
     },
   });
@@ -50,7 +50,7 @@ export default function NewUsersContainer(): ReactElement {
       headerTitle="Novo usuário"
       resource="USERS"
       action="CREATE"
-      onlyDirty
+      allowEditRole
     />
   );
 }

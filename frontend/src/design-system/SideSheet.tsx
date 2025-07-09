@@ -96,7 +96,7 @@ function Footer({
   return (
     <div
       className={classNames(
-        "p-6 border-t border-neutral-300 flex flex-0",
+        "p-6 border-t border-light-outlineVariant flex flex-0",
         className
       )}
     >

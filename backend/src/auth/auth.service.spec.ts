@@ -326,4 +326,32 @@ describe('AuthService', () => {
       }),
     ).toBeTruthy();
   });
+
+  it('should request change password', async () => {
+    const spy = jest.spyOn(authService['emailService'], 'sendEmail');
+
+    await authService.requestChangePassword({
+      requestChangePasswordInDto: {
+        id: POPULATE_USER_DEFAULT.id,
+        clientId: POPULATE_CLIENT_PRIMARY_ID,
+      },
+    });
+
+    expect(spy).toHaveBeenCalledWith({
+      to: POPULATE_USER_DEFAULT.email,
+      title: 'Redefina sua senha',
+      body: `${FRONTEND_URL}/?token=`,
+    });
+  });
+
+  it('should thown an error due to email of an inactive user', async () => {
+    await expect(
+      authService.requestChangePassword({
+        requestChangePasswordInDto: {
+          id: POPULATE_USER_INACTIVE.id,
+          clientId: POPULATE_CLIENT_PRIMARY_ID,
+        },
+      }),
+    ).rejects.toThrow(NotFoundException);
+  });
 });

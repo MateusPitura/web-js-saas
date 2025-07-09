@@ -6,18 +6,23 @@ import {
   useMemo,
   type ReactElement,
 } from "react";
-import { FieldValues, useFormContext, useFormState } from "react-hook-form";
+import {
+  FieldValues,
+  Path,
+  useFormContext,
+  useFormState,
+} from "react-hook-form";
 import ErrorLabel from "./ErrorLabel";
 
 interface ContainerProps<T extends FieldValues> extends Childrenable {
-  name: keyof T & string;
+  name: Path<T>;
   hideErrorLabel?: boolean;
 }
 
 function Container<T extends FieldValues>({
   children,
   name,
-  hideErrorLabel
+  hideErrorLabel,
 }: ContainerProps<T>): ReactElement {
   const enhancedChildren = useMemo(
     () =>
@@ -38,7 +43,12 @@ interface RadioProperties {
   hideErrorLabel?: boolean;
 }
 
-function Radio({ label, name, hideErrorLabel, ...props }: RadioProperties): ReactNode {
+function Radio({
+  label,
+  name,
+  hideErrorLabel,
+  ...props
+}: RadioProperties): ReactNode {
   const { register } = useFormContext();
 
   const { errors } = useFormState({
@@ -53,10 +63,10 @@ function Radio({ label, name, hideErrorLabel, ...props }: RadioProperties): Reac
         <input
           type="radio"
           {...register(name)}
-          className="peer col-start-1 row-start-1 appearance-none shrink-0 w-4 h-4 border-2 border-light-primary rounded-full disabled:border-neutral-300 cursor-pointer"
+          className="peer col-start-1 row-start-1 appearance-none shrink-0 w-4 h-4 border-2 border-light-primary rounded-full disabled:border-light-disabled cursor-pointer"
           {...props}
         />
-        <div className="col-start-1 row-start-1 w-2 h-2 rounded-full peer-checked:bg-light-primary peer-checked:peer-disabled:bg-neutral-300" />
+        <div className="col-start-1 row-start-1 w-2 h-2 rounded-full peer-checked:bg-light-primary peer-checked:peer-disabled:bg-light-disabled" />
       </div>
       <div className="text-body-large text-light-onSurface">{label}</div>
       {hideErrorLabel || <ErrorLabel errors={errors} name={name} />}
@@ -66,13 +76,18 @@ function Radio({ label, name, hideErrorLabel, ...props }: RadioProperties): Reac
 
 type CheckboxProperties = RadioProperties;
 
-function Checkbox({ label, name, hideErrorLabel, ...props }: CheckboxProperties): ReactNode {
+function Checkbox({
+  label,
+  name,
+  hideErrorLabel,
+  ...props
+}: CheckboxProperties): ReactNode {
   const { register } = useFormContext();
 
   const { errors } = useFormState({
     name,
   });
-  
+
   if (!name) return;
 
   return (
@@ -80,7 +95,7 @@ function Checkbox({ label, name, hideErrorLabel, ...props }: CheckboxProperties)
       <input
         type="checkbox"
         {...register(name)}
-        className="col-start-1 row-start-1 shrink-0 w-4 h-4 border-2 accent-light-primary disabled:border-neutral-300 cursor-pointer"
+        className="col-start-1 row-start-1 shrink-0 w-4 h-4 border-2 accent-light-primary disabled:border-light-disabled cursor-pointer"
         {...props}
       />
       <div className="text-body-large text-light-onSurface">{label}</div>

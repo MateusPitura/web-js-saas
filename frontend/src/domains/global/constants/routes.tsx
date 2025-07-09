@@ -25,6 +25,7 @@ const Users = lazy(() => import("@/domains/users/components/UsersPage"));
 const NewUser = lazy(() => import("@/domains/users/components/NewUsersPage"));
 const EditUser = lazy(() => import("@/domains/users/components/EditUserPage"));
 const Profile = lazy(() => import("@/domains/profile/components/ProfilePage"));
+const EditProfile = lazy(() => import("@/domains/profile/components/EditProfilePage"));
 const Branches = lazy(
   () => import("@/domains/branches/components/BranchesPage")
 );
@@ -87,6 +88,11 @@ export const privateRoutes: RouteGroup[] = [
         icon: "Settings",
         entryPage: <Profile />,
         shouldDisplay: true,
+      },
+      {
+        path: "/profile/edit",
+        entryPage: <EditProfile />,
+        shouldDisplay: false,
       },
     ],
   },

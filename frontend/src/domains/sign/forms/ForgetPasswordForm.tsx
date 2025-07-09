@@ -32,7 +32,7 @@ export default function ForgetPasswordForm(): ReactNode {
     mutationFn: handleForgetPassword,
     onSuccess: () => {
       showSuccessSnackbar({
-        title: "Enviaremos um email para definir a senha",
+        title: "Um email será enviado",
         description: "Confira também a caixa de spam",
       });
       closeDialog();

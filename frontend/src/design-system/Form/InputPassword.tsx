@@ -1,10 +1,10 @@
 import { useState, type ReactNode } from "react";
 
 import Input from "./Input";
-import { FieldValues } from "react-hook-form";
+import { FieldValues, Path } from "react-hook-form";
 
 interface InputPasswordProperties<T> {
-  name: keyof T & string;
+  name: Path<T>;
   label: string;
   required?: boolean;
   autoFocus?: boolean;

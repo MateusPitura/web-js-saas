@@ -55,6 +55,8 @@ export default {
           surfaceContainer: "#FCEAE7",
           surfaceContainerHigh: "#F7E4E1",
           surfaceContainerHighest: "#F1DFDC",
+          // Custom colors
+          disabled: "#D4D4D4"
         },
       },
       fontSize: {

@@ -198,7 +198,7 @@ describe('UserService', () => {
     });
   });
 
-  it('should update user email', async () => {
+  it('should update user', async () => {
     await prismaService.transaction(async (transaction) => {
       Reflect.set(userService, 'prismaService', transaction);
 
@@ -208,7 +208,7 @@ describe('UserService', () => {
             id: POPULATE_USER_DEFAULT.id,
           },
           userUpdateInDto: {
-            email: 'jane.doe@email.com',
+            fullName: 'Jane Doe',
           },
           clientId: POPULATE_CLIENT_PRIMARY_ID,
         }),
@@ -218,7 +218,7 @@ describe('UserService', () => {
     });
   });
 
-  it('should not verify duplicated if email or cpf is not passed', async () => {
+  it('should not verify duplicated if cpf is not passed', async () => {
     const spy = jest.spyOn(userService, 'verifyDuplicated');
 
     await userService.update({
@@ -232,34 +232,6 @@ describe('UserService', () => {
     });
 
     expect(spy).toHaveBeenCalledTimes(0);
-  });
-
-  it('should not update user with email that already exist', async () => {
-    await expect(
-      userService.update({
-        where: {
-          id: POPULATE_USER_DEFAULT.id,
-        },
-        userUpdateInDto: {
-          email: POPULATE_USER_DEFAULT.email,
-        },
-        clientId: POPULATE_CLIENT_PRIMARY_ID,
-      }),
-    ).rejects.toThrow(ConflictException);
-  });
-
-  it('should not update user with an email of an inactive user', async () => {
-    await expect(
-      userService.update({
-        where: {
-          id: POPULATE_USER_DEFAULT.id,
-        },
-        userUpdateInDto: {
-          email: POPULATE_USER_INACTIVE.email,
-        },
-        clientId: POPULATE_CLIENT_PRIMARY_ID,
-      }),
-    ).rejects.toThrow(ConflictException);
   });
 
   it('should update user cpf', async () => {

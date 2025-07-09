@@ -17,14 +17,16 @@ export default function selectUserInfo(data: User): UserFormInputs {
         })
       : "",
     roleId: data.roleId?.toString() ?? "",
-    address: {
-      cep: applyMask(data.address?.cep, "cep") ?? "",
-      number: data.address?.number ?? "",
-      street: data.address?.street ?? "",
-      complement: data.address?.complement ?? "",
-      neighborhood: data.address?.neighborhood ?? "",
-      city: data.address?.city ?? "",
-      state: data.address?.state ?? "",
-    },
+    address: data.address
+      ? {
+          cep: applyMask(data.address?.cep, "cep") ?? "",
+          number: data.address?.number ?? "",
+          street: data.address?.street ?? "",
+          complement: data.address?.complement ?? "",
+          neighborhood: data.address?.neighborhood ?? "",
+          city: data.address?.city ?? "",
+          state: data.address?.state ?? "",
+        }
+      : null,
   };
 }

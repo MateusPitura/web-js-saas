@@ -104,7 +104,7 @@ const ButtonVariant = forwardRef(
               {
                 "bg-light-secondary": state === "active",
                 "!bg-light-error": state === "red",
-                "!bg-neutral-300": state === "disabled" || state === "loading",
+                "!bg-light-disabled": state === "disabled" || state === "loading",
               }
             )}
             state={state}
@@ -121,7 +121,7 @@ const ButtonVariant = forwardRef(
               {
                 "bg-light-primaryContainer": state === "active",
                 "!border-light-error !text-light-error": state === "red",
-                "border-neutral-300 text-neutral-300":
+                "border-light-disabled text-light-disabled":
                   state === "disabled" || state === "loading",
               }
             )}
@@ -136,7 +136,7 @@ const ButtonVariant = forwardRef(
             className={classNames("text-light-onSurface", className, {
               "text-light-primary": state === "active",
               "!text-light-error": state === "red",
-              "text-neutral-300": state === "disabled" || state === "loading",
+              "text-light-disabled": state === "disabled" || state === "loading",
             })}
             state={state}
             ref={ref}
@@ -149,7 +149,7 @@ const ButtonVariant = forwardRef(
             className={classNames("text-light-primary", className, {
               "bg-light-primaryContainer": state === "active",
               "!text-light-error": state === "red",
-              "text-neutral-300": state === "disabled" || state === "loading",
+              "text-light-disabled": state === "disabled" || state === "loading",
             })}
             state={state}
             ref={ref}

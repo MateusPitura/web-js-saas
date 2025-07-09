@@ -25,7 +25,7 @@ export interface DashBoardProps {
 export type Mask = "cellphone" | "cpf" | "cep" | "cnpj";
 
 export type QueryKeys = [
-  "cepApi" | "user" | "profile" | "usersDashboard" | "permissions",
+  "cepApi" | "user" | "users" | "profile" | "usersDashboard" | "permissions",
   ...ReadonlyArray<unknown>
 ];
 

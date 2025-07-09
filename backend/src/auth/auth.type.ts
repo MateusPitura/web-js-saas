@@ -4,6 +4,7 @@ import {
   AuthResetPasswordInDto,
   AuthSignInInDto,
   AuthSignUpInDto,
+  RequestChangePasswordInDto,
 } from './auth.schema';
 import { Permissions } from '@shared/types';
 
@@ -48,6 +49,10 @@ export interface ResetPasswordInput {
 
 export interface ForgetPasswordInput {
   authForgetPasswordInDto: AuthForgetPasswordInDto;
+}
+
+export interface RequestChangePasswordInput {
+  requestChangePasswordInDto: RequestChangePasswordInDto;
 }
 
 export interface CustomizeValidationProperties {

@@ -19,6 +19,11 @@ const SchemaAuthForgetPasswordInDto = SchemaAuthSigInInDto.pick({
   email: true,
 });
 
+const SchemaRequestChangePasswordInDto = s.object({
+  id: s.id(),
+  clientId: s.id(),
+});
+
 const SchemaAuthSignUpInDto = s.object({
   email: s.email(),
   fullName: s.fullName(),
@@ -34,4 +39,7 @@ export class AuthForgetPasswordInDto extends createZodDto(
 export class AuthSignUpInDto extends createZodDto(SchemaAuthSignUpInDto) {}
 export class AuthResetPasswordInDto extends createZodDto(
   SchemaResetPasswordInDto,
+) {}
+export class RequestChangePasswordInDto extends createZodDto(
+  SchemaRequestChangePasswordInDto,
 ) {}

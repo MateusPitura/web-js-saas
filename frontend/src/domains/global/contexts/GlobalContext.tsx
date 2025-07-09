@@ -14,12 +14,11 @@ const GlobalContext = createContext<GlobalContextValues | null>(null);
 const authChannel = new BroadcastChannel("auth");
 
 function GlobalProvider({ children }: Childrenable) {
-
   authChannel.onmessage = (event) => {
     if (event?.data?.type === AUTH_CHANNEL.SIGNIN) {
-      safeNavigate('/profile')
+      safeNavigate("/profile");
     } else if (event?.data?.type === AUTH_CHANNEL.SIGNOUT) {
-      safeNavigate('/')
+      safeNavigate("/");
     }
   };
 
@@ -41,7 +40,7 @@ function GlobalProvider({ children }: Childrenable) {
       handleUsersFilter,
       authChannel,
     }),
-    [usersFilter]
+    [usersFilter, handleUsersFilter]
   );
 
   return (

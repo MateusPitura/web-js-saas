@@ -1,3 +1,4 @@
+import { SEED_ROLE_ADMIN_ID, SEED_ROLE_SALES_ID } from "@shared/constants";
 import { s } from "@shared/safeZod";
 
 export const SchemaAddress = s.SchemaAddress.extend({
@@ -21,6 +22,6 @@ export const SchemaUserForm = s.object({
   cpf: s.cpf().or(s.empty()),
   code: s.string().or(s.empty()),
   birthDate: s.birthDate().or(s.empty()),
-  roleId: s.string(),
-  address: SchemaAddress,
+  roleId: s.list([String(SEED_ROLE_ADMIN_ID), String(SEED_ROLE_SALES_ID)]).optional(),
+  address: SchemaAddress.nullable(),
 });

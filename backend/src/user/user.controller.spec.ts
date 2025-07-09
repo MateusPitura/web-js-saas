@@ -133,7 +133,7 @@ describe('UserController', () => {
     ).rejects.toThrow(ForbiddenException);
   });
 
-  it('should update user email and return the same properties of get user', async () => {
+  it('should update user and return the same properties of get user', async () => {
     await prismaService.transaction(async (transaction) => {
       Reflect.set(userService, 'prismaService', transaction);
 
@@ -149,7 +149,7 @@ describe('UserController', () => {
         request,
         { id: POPULATE_USER_DEFAULT.id },
         {
-          email: 'jane.doe@email.com',
+          fullName: 'Jane Doe',
         },
       );
 
@@ -161,7 +161,7 @@ describe('UserController', () => {
     });
   });
 
-  it('should not allow update user email by id equal to signed id', async () => {
+  it('should not allow update user with id equal to signed id', async () => {
     await prismaService.transaction(async (transaction) => {
       Reflect.set(userService, 'prismaService', transaction);
 
@@ -170,7 +170,7 @@ describe('UserController', () => {
           AUTH_REQUEST_DEFAULT,
           { id: POPULATE_USER_DEFAULT.id },
           {
-            email: 'jane.doe@email.com',
+            fullName: 'Jane Doe',
           },
         ),
       ).rejects.toThrow(ForbiddenException);
@@ -184,7 +184,7 @@ describe('UserController', () => {
       Reflect.set(userService, 'prismaService', transaction);
 
       const user = await userController.patchProfile(AUTH_REQUEST_DEFAULT, {
-        email: 'jane.doe@email.com',
+        fullName: 'Jane Doe',
       });
 
       for (const key in GET_USER) {

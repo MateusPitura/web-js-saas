@@ -126,4 +126,11 @@ describe('AuthController', () => {
       transaction.rollback();
     });
   });
+
+  it('should request change password', async () => {
+    const response =
+      await authController.requestChangePassword(AUTH_REQUEST_DEFAULT);
+
+    expect(response).toBeTruthy();
+  });
 });

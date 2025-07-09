@@ -10,7 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthRequest, AuthRequestResetPassword } from './auth.type';
-import { AuthGuardResetPassword, AuthGuardSignOut } from './auth.guard';
+import {
+  AuthGuard,
+  AuthGuardResetPassword,
+  AuthGuardSignOut,
+} from './auth.guard';
 import {
   AuthForgetPasswordInDto,
   AuthSignInInDto,
@@ -70,6 +74,19 @@ export class AuthController {
   ) {
     return await this.authService.forgetPassword({
       authForgetPasswordInDto,
+    });
+  }
+
+  @Post('request-change-password')
+  @UseGuards(AuthGuard)
+  async requestChangePassword(@Req() req: AuthRequest) {
+    const { userId, clientId } = req.authToken;
+
+    return await this.authService.requestChangePassword({
+      requestChangePasswordInDto: {
+        id: userId,
+        clientId,
+      },
     });
   }
 }
