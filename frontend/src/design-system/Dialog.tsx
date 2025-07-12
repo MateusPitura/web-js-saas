@@ -1,11 +1,11 @@
 import { type ReactElement } from "react";
 import {
-    Dialog as DialogShadcn,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
+  Dialog as DialogShadcn,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import Button from "./Button";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -21,7 +21,7 @@ function Container({ children, ...dialog }: ContainerProps): ReactElement {
   return (
     <DialogProvider {...dialog}>
       <DialogShadcn open={dialog.isOpen} onOpenChange={dialog.handleOpen}>
-        <DialogContent className="bg-light-surfaceContainerLowest p-0 gap-0">
+        <DialogContent className="bg-light-surfaceContainerLowest p-0 gap-0 [&>button]:!ring-0 [&>button]!outline-none [&>button]:!ring-offset-0">
           {children}
         </DialogContent>
       </DialogShadcn>
@@ -39,7 +39,7 @@ function Header({ title }: HeaderProps): ReactElement {
       <DialogTitle className="flex-1">
         <span className="text-light-onSurface text-title-large">{title}</span>
       </DialogTitle>
-      <DialogDescription />
+      <DialogDescription className="hidden" />
     </DialogHeader>
   );
 }

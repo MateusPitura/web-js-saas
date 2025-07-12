@@ -22,8 +22,7 @@ function Container({ children, ...dialog }: ContainerProps): ReactElement {
     <DialogProvider {...dialog}>
       <Sheet open={dialog.isOpen} onOpenChange={dialog.handleOpen}>
         {children}
-        {/* DialogDescription corrige warning de acessibilidade */}
-        <DialogDescription />
+        <DialogDescription className="hidden" />
       </Sheet>
     </DialogProvider>
   );

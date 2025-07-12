@@ -29,7 +29,7 @@ export default function Snackbar(): ReactElement {
             variant={variant}
             {...props}
             className={classNames(
-              "bg-light-surfaceContainerLowest border-light-surfaceContainerLowest mt-2",
+              "bg-light-surfaceContainerLowest border-light-surfaceContainerLowest mt-2 [&>button]:!ring-0 [&>button]!outline-none [&>button]:!ring-offset-0",
               {
                 "bg-light-error border-light-error": variant === "destructive",
               }
