@@ -16,7 +16,7 @@ import {
 
 const prisma = new PrismaClient();
 
-async function seed() {
+async function populate() {
   await prisma.client.createMany({
     data: [
       {
@@ -89,7 +89,7 @@ async function seed() {
   await Promise.all(promises);
 }
 
-seed()
+populate()
   .catch((error) => {
     console.error('❌ Failed to run populate', error);
   })

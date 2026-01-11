@@ -885,7 +885,7 @@ describe('UserService', () => {
     expect(result).toHaveProperty('data', []);
   });
 
-  it('should get user permissions', async () => {
+  it('should not get user permissions with outer client id provided', async () => {
     await expect(
       userService.getPermissions({
         userId: POPULATE_USER_DEFAULT.id,
@@ -894,7 +894,7 @@ describe('UserService', () => {
     ).rejects.toThrow(NotFoundException);
   });
 
-  it('should not get user permissions with outer client id provided', async () => {
+  it('should get user permissions', async () => {
     const permissions = await userService.getPermissions({
       userId: POPULATE_USER_DEFAULT.id,
       clientId: POPULATE_CLIENT_PRIMARY_ID,

@@ -48,7 +48,7 @@ export default function Input<T extends FieldValues>({
   const { errors } = useFormState({
     name,
   });
-  const value = useWatch({ name });
+  const value = useWatch({ name }); // 🌠 trocar para apenas watch
 
   useEffect(() => {
     if (mask) {
